@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDU", "VDU.csproj", "{4122DD6A-EC43-4242-A805-CF5A858D6329}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4122DD6A-EC43-4242-A805-CF5A858D6329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4122DD6A-EC43-4242-A805-CF5A858D6329}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4122DD6A-EC43-4242-A805-CF5A858D6329}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4122DD6A-EC43-4242-A805-CF5A858D6329}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

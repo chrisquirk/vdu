@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.labelCurrentAction = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.concentricRingTree1 = new VDU.ConcentricRingTree();
             this.listView1 = new System.Windows.Forms.ListView();
@@ -40,6 +41,7 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -66,6 +68,15 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // labelCurrentAction
+            // 
+            this.labelCurrentAction.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.labelCurrentAction.Location = new System.Drawing.Point(0, 475);
+            this.labelCurrentAction.Name = "labelCurrentAction";
+            this.labelCurrentAction.Size = new System.Drawing.Size(913, 23);
+            this.labelCurrentAction.TabIndex = 5;
+            this.labelCurrentAction.Text = "[Done]";
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -80,7 +91,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listView1);
             this.splitContainer1.Panel2.Controls.Add(this.textBox2);
-            this.splitContainer1.Size = new System.Drawing.Size(913, 455);
+            this.splitContainer1.Size = new System.Drawing.Size(913, 432);
             this.splitContainer1.SplitterDistance = 500;
             this.splitContainer1.TabIndex = 4;
             // 
@@ -89,7 +100,7 @@
             this.concentricRingTree1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.concentricRingTree1.Location = new System.Drawing.Point(0, 0);
             this.concentricRingTree1.Name = "concentricRingTree1";
-            this.concentricRingTree1.Size = new System.Drawing.Size(500, 455);
+            this.concentricRingTree1.Size = new System.Drawing.Size(500, 432);
             this.concentricRingTree1.TabIndex = 3;
             this.concentricRingTree1.SelectedNodeChanged += new VDU.ConcentricRingTree.NodeChangeEvent(this.concentricRingTree1_SelectedNodeChanged);
             this.concentricRingTree1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.concentricRingTree1_MouseClick);
@@ -107,7 +118,7 @@
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(0, 20);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(409, 435);
+            this.listView1.Size = new System.Drawing.Size(409, 412);
             this.listView1.TabIndex = 5;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -154,6 +165,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(913, 498);
             this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.labelCurrentAction);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.Name = "Form1";
@@ -162,6 +174,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -172,6 +185,7 @@
 
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label labelCurrentAction;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private ConcentricRingTree concentricRingTree1;
         private System.Windows.Forms.TextBox textBox2;

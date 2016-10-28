@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using ZetaLongPaths;
 
 namespace VDU
 {
@@ -28,7 +29,7 @@ namespace VDU
                 ShutdownThread();
                 m_threadAlive = true;
                 m_rootUpdated = false;
-                m_thread = new Thread(delegate() { CreateNodeTree(dir, null); });
+                m_thread = new Thread(delegate() { CreateNodeTree(dir, null); lock (UpdatedLock) { m_currentDir = "[Done]"; m_rootUpdated = true; } });
                 m_thread.Start();
             }
             catch (Exception exn)
@@ -52,32 +53,56 @@ namespace VDU
         Thread m_thread = null;
         ConcentricRingTree.Node rootNode;
         object UpdatedLock = new object();
+        string m_currentDir = "[Done]";
         bool m_rootUpdated = false;
         bool m_threadAlive = true;
 
+        Dictionary<string, Tuple<DateTime, List<ListViewItem>, long>> _cache = new Dictionary<string, Tuple<DateTime, List<ListViewItem>, long>>();
+
         private ConcentricRingTree.Node CreateNodeTree(string dir, ConcentricRingTree.Node parent)
         {
+            lock (UpdatedLock)
+            {
+                m_currentDir = dir;
+                m_rootUpdated = true;
+            }
             var node = new ConcentricRingTree.Node();
             node.Label = dir;
             node.Value = 0;
             node.Children = new List<ConcentricRingTree.Node>();
             if (!m_threadAlive)
                 return node;
-            List<ListViewItem> lfi = new List<ListViewItem>();
-            foreach (string file in Directory.GetFiles(dir))
+            List<ListViewItem> llvi = new List<ListViewItem>();
+            var zdir = new ZlpDirectoryInfo(dir);
+            Tuple<DateTime, List<ListViewItem>, long> cachedInfo;
+            var items = new List<ListViewItem>();
+            long totalLen = 0;
+            if (_cache.TryGetValue(dir, out cachedInfo) && zdir.LastWriteTime == cachedInfo.Item1)
             {
-                var fi = new FileInfo(file);
-                var lvi = new ListViewItem(new string[] {
-                    fi.Name,
-                    fi.LastWriteTime.ToShortDateString() + " " + fi.LastWriteTime.ToShortTimeString(),
-                    fi.Extension,
-                    SizeString(fi.Length) });
-                lvi.Tag = fi.Length;
-                lfi.Add(lvi);
-                node.Value += fi.Length;
-                if (!m_threadAlive)
-                    return node;
+                foreach (var lvi in cachedInfo.Item2)
+                    items.Add(lvi);
+                totalLen = cachedInfo.Item3;
             }
+            else
+            {
+                foreach (var zfile in zdir.GetFiles())
+                {
+                    var lvi = new ListViewItem(new string[] {
+                    zfile.Name,
+                    zfile.LastWriteTime.ToShortDateString() + " " + zfile.LastWriteTime.ToShortTimeString(),
+                    zfile.Extension,
+                    SizeString(zfile.Length) });
+                    lvi.Tag = zfile.Length;
+                    llvi.Add(lvi);
+                    totalLen += zfile.Length;
+                    items.Add(lvi);
+                    if (!m_threadAlive)
+                        return node;
+                }
+                items.Sort((a, b) => (Math.Sign(((long)b.Tag) - (long)a.Tag)));
+                _cache[dir] = Tuple.Create(zdir.LastWriteTime, llvi, totalLen);
+            }
+            node.Value += totalLen;
             lock (UpdatedLock)
                 if (parent != null)
                     parent.AddChild(node);
@@ -85,13 +110,12 @@ namespace VDU
                     rootNode = node;
             lock (UpdatedLock)
                 m_rootUpdated = true;
-            lfi.Sort((a, b) => (Math.Sign(((long)b.Tag) - (long)a.Tag)));
-            d[dir.ToLower()] = lfi;
-            foreach (string subdir in Directory.GetDirectories(dir))
+            d[dir.ToLower()] = items;
+            foreach (var zsubdir in zdir.GetDirectories())
             {
                 try
                 {
-                    CreateNodeTree(subdir, node);
+                    CreateNodeTree(zsubdir.FullName, node);
                 }
                 catch (UnauthorizedAccessException)
                 { }
@@ -182,6 +206,7 @@ namespace VDU
             {
                 if (m_rootUpdated)
                 {
+                    labelCurrentAction.Text = m_currentDir;
                     concentricRingTree1.Root = rootNode;
                     concentricRingTree1.UpdateStructure();
                     m_rootUpdated = false;
